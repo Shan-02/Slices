@@ -1,25 +1,5 @@
-required_packages <- c(
-  "worldfootballR", "geomtextpath","shiny", "shinybusy","bslib","tidyverse",
-   "showtext","forcats", "glue", "ggtext", "magick", "rvest", "dplyr","xlsx",
-   "RSQLite","DBI"
-)
-
-# Function to check and install missing packages
-install_if_missing <- function(package) {
-  if (!require(package, character.only = TRUE)) {
-    install.packages(package, dependencies = TRUE)
-    library(package, character.only = TRUE)
-  }
-}
-
-# Install or load each required package
-lapply(required_packages, install_if_missing)
-
-# Top5dfUrls<- read.csv("Data/Top5PlayerUrls.csv")
-# Top5dfUrls<-purrr::discard(Top5dfUrls, ~all(is.na(.)))
-
 ui <- fluidPage(
-  
+  useShinyjs(),  
   use_busy_spinner(spin = "radar", position = "top-right", color = "#fff"),
   # Add custom CSS styling
   tags$style(
@@ -90,7 +70,6 @@ ui <- fluidPage(
       uiOutput("errorMessage"),   # Add error message display
       
       # Add navigation controls with shinyjs enabled
-      shinyjs::useShinyjs(),
       
       # Add image info
       div(class = "image-info", 
@@ -274,7 +253,9 @@ server <- function(input, output, session) {
     })
     
     # Get the latest generated image
-    latest_file <- list.files("~/NewDar/Radars", full.names = TRUE, pattern = "\\.png$") %>%
+    img_dir <- file.path(getwd(), "Radars")
+    latest_file <- list.files(img_dir, full.names = TRUE, pattern = "\\.png$") %>%
+ 
       file.info() %>%
       dplyr::as_tibble(rownames = "filepath") %>%
       dplyr::arrange(desc(mtime)) %>%
@@ -284,23 +265,7 @@ server <- function(input, output, session) {
     # Add to database
     player_name <- getPlayerNameFromUrl(player_url)
     
-    dbExecute(DB_CONNECTION, "
-      INSERT INTO image_history (
-        filepath, 
-        player_name, 
-        competition, 
-        period, 
-        template, 
-        style
-      ) VALUES (?, ?, ?, ?, ?, ?)
-    ", params = list(
-      latest_file,
-      player_name,
-      input$competition,
-      input$scouting_period,
-      input$template,
-      input$style
-    ))
+    
     
     # Reload image history and reset to first (newest) image
     values$imageHistoryData <- getImageHistory()
