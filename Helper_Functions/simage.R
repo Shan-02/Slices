@@ -10,7 +10,7 @@ simage <- function(
 ) {
   # Ensure Player_head is within the 'Images' folder
   if (!grepl("^Images/", Player_head)) {
-    Player_head <- file.path("Images", Player_head)
+    Player_head <- file.path("Logos", Player_head)
   }  # Get the values from df_selected
   
   gc()
@@ -28,7 +28,7 @@ simage <- function(
   tfile <- paste(player_name, season, template, team,comp, date, sep = ", ")
   tfile <- paste0(tfile, ".png")
   # Specify the save directory
-  save_directory <- "~/NewDar/Radars"
+  save_directory <- file.path(getwd(), "Radars")
   #Guide<-"Auora.png"
   # Calculate the width and height in inches
   dimension<-6000
