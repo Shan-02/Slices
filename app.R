@@ -89,9 +89,16 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  # Initialize the database connection globally
-  DB_CONNECTION <<- setupDatabase()
-  
+  # Local database connection
+  tryCatch({
+    DB_CONNECTION <- setupDatabase()
+  }, error = function(e) {
+    showNotification(
+      paste("Database Connection Error:", e$message), 
+      type = "error"
+    )
+    DB_CONNECTION <- NULL
+  })  
   # Reactive values for tracking current image and total images
   values <- reactiveValues(
     currentImageIndex = 1,
@@ -313,10 +320,11 @@ server <- function(input, output, session) {
   
   # Clean up database connection when app closes
   onStop(function() {
-    if (!is.null(DB_CONNECTION)) {
+    if (!is.null(DB_CONNECTION) && 
+        inherits(DB_CONNECTION, "DBIConnection") && 
+        dbIsValid(DB_CONNECTION)) {
       dbDisconnect(DB_CONNECTION)
     }
   })
 }
-
 shinyApp(ui = ui, server = server)
