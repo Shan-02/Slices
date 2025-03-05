@@ -17,7 +17,7 @@ library(worldfootballR)
 library(geomtextpath)   
 library(shinyjs)        
 library(showtext)       
-
+library(RSQLite)
 # Safe file loading with GitHub repository context
 files <- tryCatch(
   list.files("Helper_Functions", full.names = TRUE, pattern = "\\.R$"),
@@ -26,13 +26,18 @@ files <- tryCatch(
 lapply(files, source)
 
 # Load dataset with error handling
-Top5dfUrls <- tryCatch(
-  read.csv("Data/Top5PlayerUrls.csv"),
-  error = function(e) {
-    warning("Could not load Top5PlayerUrls.csv: ", e$message)
-    data.frame() # Return empty dataframe
-  }
-)
+
+# if (!file.exists("Top5PlayerUrls.csv")) {
+#   stop("Error: Data/Top5PlayerUrls.csv not found! Check the file path.")
+# } else {
+#   stop("File Found")
+# }
+csv_path <- "Data3/Top5PlayerUrls.csv"
+if (!file.exists(csv_path)) {
+  stop(paste("⚠️ Error: CSV file not found at:", csv_path, "\nCheck file location and working directory:", getwd()))
+ }
+ Top5dfUrls <- read.csv(csv_path)
+
 
 # Database setup function
 setupDatabase <- function() {
