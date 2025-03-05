@@ -1,0 +1,23 @@
+{
+  "R": {
+    "Version": "4.2.0",
+    "Repositories": [
+      {
+        "Name": "CRAN",
+        "URL": "https://cloud.r-project.org"
+      }
+    ]
+  },
+  "Packages": {
+    "shiny": {
+      "Package": "shiny",
+      "Version": "1.7.4",
+      "Priority": "recommended"
+    },
+    "worldfootballR": {
+      "Package": "worldfootballR",
+      "Version": "0.4.2"
+    }
+    // Add other specific package versions here
+  }
+}
