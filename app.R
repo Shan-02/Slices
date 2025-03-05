@@ -1,3 +1,5 @@
+source("global.R")
+
 ui <- fluidPage(
   useShinyjs(),  
   use_busy_spinner(spin = "radar", position = "top-right", color = "#fff"),
@@ -38,7 +40,7 @@ ui <- fluidPage(
     ")
   ),
   
-  titlePanel("Slices"),  # App Title
+  titlePanel("Slices35"),  # App Title
   sidebarLayout(
     sidebarPanel(
       page_fluid(
