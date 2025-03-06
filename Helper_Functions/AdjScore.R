@@ -15,7 +15,3 @@ adjusted_score <- function(percentiles, alpha = 0.25, beta = 0.025) {
   return(S)
 }
 
- Hperc = c(72,26,90,81)
-  print (adjusted_score(Hperc))
-#  Lperc = c(30,40,30,40)
-#  print (adjusted_score(Lperc))
